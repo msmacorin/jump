@@ -1,0 +1,8 @@
+<project name="build model" basedir="." default="build-model">
+    <target name="build-model">
+        <exec dir="." executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+</project>

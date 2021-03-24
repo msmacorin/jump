@@ -1,0 +1,41 @@
+<project name="deploy pessoa" default="deploy-pessoa" basedir=".">
+
+    <property name="root.dir" location=".."/>
+    <property name="core.dir" location="${root.dir}/core"/>
+    <property name="datamodel.dir" location="${root.dir}/datamodel"/>
+    <property name="shared.dir" location="${root.dir}/datamodel"/>
+
+    <target name="deploy-pessoa" depends="build-pessoa" description="Deploy do módulo Pessoaistrador">
+        <exec dir="." executable="mvn">
+            <arg value="jboss-as:deploy"/>
+        </exec>
+    </target>
+
+    <target name="build-pessoa" depends="build-core">
+        <exec dir="." executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <target name="build-core" depends="build-datamodel">
+        <exec dir="${core.dir}" executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <target name="build-datamodel">
+        <exec dir="${datamodel.dir}" executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <target name="build-shared">
+        <exec dir="${shared.dir}" executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+</project>

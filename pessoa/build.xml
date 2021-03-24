@@ -1,0 +1,8 @@
+<project name="build pessoa" default="build-pessoa" basedir=".">
+	<target name="build-pessoa" >
+		<exec dir="." executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+</project>

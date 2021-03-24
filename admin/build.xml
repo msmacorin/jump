@@ -1,0 +1,8 @@
+<project name="build admin" basedir="." default="build-admin">
+   <target name="build-admin">
+        <exec dir="." executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+</project>

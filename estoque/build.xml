@@ -1,0 +1,41 @@
+<project name="estoque" default="deploy-estoque" basedir=".">
+	
+	<property name="root.dir" location=".."/>
+	<property name="core.dir" location="${root.dir}/core"/>
+	<property name="datamodel.dir" location="${root.dir}/datamodel"/>
+	<property name="shared.dir" location="${root.dir}/datamodel"/>
+	
+	<target name="deploy-estoque" depends="build-estoque" description="Deploy do módulo Estoqueistrador">
+		<exec dir="." executable="mvn">
+			<arg value="jboss-as:deploy"/>
+		</exec>
+	</target>
+	
+	<target name="build-estoque" depends="build-core">
+		<exec dir="." executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+	
+	<target name="build-core" depends="build-datamodel">
+		<exec dir="${core.dir}" executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+	
+	<target name="build-datamodel">
+		<exec dir="${datamodel.dir}" executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+	
+	<target name="build-shared">
+		<exec dir="${shared.dir}" executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+</project>

@@ -1,0 +1,47 @@
+<project name="deploy admin" default="deploy-admin" basedir=".">
+	
+	<property name="root.dir" location=".."/>
+	<property name="core.dir" location="${root.dir}/core"/>
+	<property name="dao.dir" location="${root.dir}/dao"/>
+	<property name="service.dir" location="${root.dir}/service"/>
+	<property name="datamodel.dir" location="${root.dir}/datamodel"/>
+	<property name="shared.dir" location="${root.dir}/shared"/>
+	
+	<target name="deploy-admin" depends="build-admin" description="Deploy do módulo Administrador">
+		<exec dir="." executable="mvn">
+			<arg value="jboss-as:deploy"/>
+		</exec>
+	</target>
+	
+	<target name="build-admin" depends="build-core">
+		<exec dir="." executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+	
+	<target name="build-core" depends="build-datamodel">
+		<exec dir="${core.dir}" executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+
+	<target name="build-datamodel">
+<<<<<<< HEAD
+		<exec dir="domain" executable="mvn">
+=======
+		<exec dir="${datamodel.dir}" executable="mvn">
+>>>>>>> 66e1cbb23cbfbee78e9d4f620feb7afefcf1e718
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+	
+	<target name="build-shared">
+		<exec dir="${shared.dir}" executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+</project>

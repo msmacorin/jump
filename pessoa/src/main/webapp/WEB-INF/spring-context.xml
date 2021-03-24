@@ -1,0 +1,121 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+ 
+    <!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <context:component-scan base-package="br.com.jump.core,br.com.jump.pessoa" />
+
+    <!-- Configures the @Controller programming model -->
+    <mvc:annotation-driven />
+	
+    <mvc:interceptors>
+        <bean class="br.com.jump.core.interceptor.RootContextInterceptor" />
+        <bean class="br.com.jump.core.interceptor.SecurityAccessInterceptor">
+            <property name="loginService" ref="loginService" />
+            <property name="permissaoService" ref="permissaoService" />
+        </bean>
+        <bean class="br.com.jump.pessoa.interceptor.MenuPessoaInterceptor"></bean>
+    </mvc:interceptors> 
+
+    <!-- Configures Handler Interceptors -->	
+    <mvc:interceptors>
+        <!-- Changes the locale when a 'locale' request parameter is sent; e.g. /?locale=de -->
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+    </mvc:interceptors>
+
+    <!-- Saves a locale change using a cookie -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
+
+    <!-- Application Message Bundle -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>/WEB-INF/messages/cliente</value>
+                <value>/WEB-INF/messages/enumeration</value>
+                <value>/WEB-INF/messages/errors</value>
+                <value>/WEB-INF/messages/fornecedor</value>
+                <value>/WEB-INF/messages/global</value>
+                <value>/WEB-INF/messages/localidade</value>
+                <value>/WEB-INF/messages/menu</value>
+                <value>/WEB-INF/messages/messages</value>
+                <value>/WEB-INF/messages/pais</value>
+                <value>/WEB-INF/messages/pessoa</value>
+                <value>/WEB-INF/messages/pessoaEndereco</value>
+                <value>/WEB-INF/messages/tipoEndereco</value>
+                <value>/WEB-INF/messages/unidadeFederacao</value>
+            </list>
+        </property>
+        <property name="cacheSeconds" value="0" />
+    </bean>
+
+    <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+	
+    <bean id="propertyConfigurer"
+              class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+              p:location="/WEB-INF/properties/jdbc.properties" />
+        
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource" />
+    </bean>    
+
+    <tx:annotation-driven transaction-manager="jumpTransactionManager"/>
+
+    <jee:jndi-lookup id="jumpDataSource" jndi-name="java:jboss/datasources/PostgreSQLDS"/>
+        
+    <bean id="jumpSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="jumpDataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${jump.jdbc.dialect}</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <!-- c3p0 -->
+                <prop key="hibernate.c3p0.min_size">5</prop>
+                <prop key="hibernate.c3p0.max_size">20</prop>
+                <prop key="hibernate.c3p0.timeout">300</prop>
+                <prop key="hibernate.c3p0.max_statements">50</prop>
+                <prop key="hibernate.c3p0.idle_test_period">3000</prop>
+                <!-- Ehcache -->
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop> 
+                <prop key="hibernate.cache.use_query_cache">true</prop> 
+            </props>
+        </property>
+        <property name="packagesToScan" value="br.com.jump.model"/>
+    </bean>
+    
+    <bean id="jumpTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="dataSource" ref="jumpDataSource" />
+        <property name="sessionFactory" ref="jumpSessionFactory" />
+        <qualifier value="jump" />
+    </bean>
+    
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/properties/jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+				
+
+</beans>

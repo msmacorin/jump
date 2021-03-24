@@ -1,0 +1,11 @@
+<project name="build core" default="build" basedir=".">
+
+    <property name="migrations.path" location="src/main/scripts/db/migration"/>
+
+    <target name="build">
+        <exec dir="." executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+</project>

@@ -1,0 +1,29 @@
+package br.com.jump.estoque.interceptor;
+
+import br.com.jump.core.interceptor.MenuPersonalizadoInterceptor;
+import br.com.jump.core.model.menu.ItemMenu;
+import br.com.jump.core.model.menu.Menu;
+import br.com.jump.model.sistema.Usuario;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MenuEstoqueInterceptor extends MenuPersonalizadoInterceptor {
+
+    @Override
+    public List<Menu> construirMenu(Usuario usuarioLogado) {
+        List<Menu> listaMenu = new ArrayList<Menu>();
+
+        Menu manutencao = new Menu();
+        
+        manutencao.setIcon("icon-tasks");
+        manutencao.setLabel("menu.adm.manutencao");
+        manutencao.setItensMenu(new ArrayList<ItemMenu>());
+        
+        manutencao.getItensMenu().add(new ItemMenu("menu.adm.manutencao.usuario", "/usuario/index.do"));
+        manutencao.getItensMenu().add(new ItemMenu("menu.adm.manutencao.grupoEmpresa", "/grupoEmpresa/index.do"));
+        
+        listaMenu.add(manutencao);
+        
+        return listaMenu;
+    }
+}

@@ -1,0 +1,9 @@
+<project name="jump" default="build-all" basedir=".">
+	
+	<target name="build-all">
+		<exec dir="." executable="mvn">
+			<arg value="clean"/>
+			<arg value="install"/>
+		</exec>
+	</target>
+</project>

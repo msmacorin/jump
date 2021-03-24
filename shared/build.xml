@@ -1,0 +1,8 @@
+<project name="build shared" basedir="." default="build-shared">
+    <target name="build-shared">
+        <exec dir="." executable="mvn">
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+</project>
